@@ -1,0 +1,8 @@
+PeerOrgs:
+  - Name: Registrar
+    Domain: land.registrar.com
+    Specs:
+    Template:
+      Count: 1
+    Users:
+      Count: 1

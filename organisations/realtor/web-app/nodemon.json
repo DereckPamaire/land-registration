@@ -1,0 +1,8 @@
+{
+    "signal":"SIGTERM",
+    "env":{
+        "NODE-ENV":"development"
+    },
+    "ext":"ts",
+    "exec":"ts-node -- src/apprealtor.ts"
+}

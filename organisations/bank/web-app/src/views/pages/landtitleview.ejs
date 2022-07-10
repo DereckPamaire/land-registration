@@ -1,0 +1,18 @@
+<div class="jumbotron">
+<table class="table table-borderless">
+  <% Object.keys(responseObj).forEach((key, index) => {%>
+
+      <tbody>
+        <tr>
+          <td>
+           <strong>
+            <%= `${key}:` %>
+           </strong> 
+          </td>
+          <td><%= `${responseObj[key]}`%></td>
+        </tr>
+      </tbody>
+
+  <% }); %>
+</table>
+</div>

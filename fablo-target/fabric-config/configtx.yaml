@@ -1,0 +1,264 @@
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+################################################################################
+#   CHANNEL Defaults
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#   Section: Organizations
+################################################################################
+Organizations:
+    - &Orderer
+      Name: OrdererMSP
+      ID: OrdererMSP
+      MSPDir: crypto-config/peerOrganizations/landreg.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('OrdererMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('OrdererMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('OrdererMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('OrdererMSP.member')"
+
+      AnchorPeers:
+
+    - &Registrar
+      Name: RegistrarMSP
+      ID: RegistrarMSP
+      MSPDir: crypto-config/peerOrganizations/land.registrar.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('RegistrarMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('RegistrarMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('RegistrarMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('RegistrarMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.land.registrar.com
+            Port: 7041
+
+    - &Realtor
+      Name: RealtorMSP
+      ID: RealtorMSP
+      MSPDir: crypto-config/peerOrganizations/land.realtor.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('RealtorMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('RealtorMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('RealtorMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('RealtorMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.land.realtor.com
+            Port: 7061
+
+    - &Bank
+      Name: BankMSP
+      ID: BankMSP
+      MSPDir: crypto-config/peerOrganizations/land.bank.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('BankMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('BankMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('BankMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('BankMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.land.bank.com
+            Port: 7081
+
+    - &PublicAccess
+      Name: PublicAccessMSP
+      ID: PublicAccessMSP
+      MSPDir: crypto-config/peerOrganizations/land.publicaccess.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('PublicAccessMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('PublicAccessMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('PublicAccessMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('PublicAccessMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.land.publicaccess.com
+            Port: 7101
+
+################################################################################
+#   SECTION: Application
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Application policies, their canonical path is
+    #   /Channel/Application/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+################################################################################
+#   SECTION: Orderer
+################################################################################
+Orderer: &LandregDefaults
+    OrdererType: etcdraft
+    Addresses:
+        - orderer0.landreg.landreg.com:7030
+        - orderer1.landreg.landreg.com:7031
+    EtcdRaft:
+        Consenters:
+            - Host: orderer0.landreg.landreg.com
+              Port: 7030
+              ClientTLSCert: crypto-config/peerOrganizations/landreg.com/peers/orderer0.landreg.landreg.com/tls/server.crt
+              ServerTLSCert: crypto-config/peerOrganizations/landreg.com/peers/orderer0.landreg.landreg.com/tls/server.crt
+
+            - Host: orderer1.landreg.landreg.com
+              Port: 7031
+              ClientTLSCert: crypto-config/peerOrganizations/landreg.com/peers/orderer1.landreg.landreg.com/tls/server.crt
+              ServerTLSCert: crypto-config/peerOrganizations/landreg.com/peers/orderer1.landreg.landreg.com/tls/server.crt
+
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+
+################################################################################
+#   Profile
+################################################################################
+# https://github:com/hyperledger/fabric/blob/master/sampleconfig/configtx.yaml
+
+Profiles:
+    # Profile used to create Genesis block for group landreg #
+    LandregGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *LandregDefaults
+            Organizations:
+                - *Orderer
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Orderer
+                    - *Registrar
+                    - *Realtor
+                    - *Bank
+                    - *PublicAccess
+
+    # Profile used to create channeltx for channel01 #
+    Channel01:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *LandregDefaults
+            Organizations:
+                - *Orderer
+            Capabilities:
+                <<: *ApplicationCapabilities
+        Consortium: SampleConsortium
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Registrar
+                    - *Realtor
+                    - *Bank
+                    - *PublicAccess
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Registrar
+                - *Realtor
+                - *Bank
+                - *PublicAccess

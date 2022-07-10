@@ -1,0 +1,78 @@
+<form action="/landtitleform/commit" class="container" method="post">
+    <div class="jumbotron">
+        <div class="form-row">
+            <div class ="col-md-6" >
+                <div>
+                    <div class="form-group">
+                        <label for="landTitleId"><strong>Land Title ID:</strong></label>
+                        <input type="text" class="form-control" placeholder="eg Landtitle04" name="landTitleId" required> 
+                      </div>
+                  
+                      <div class="form-group">
+                        <label for="owner"><strong>Owner Full Name:</strong></label>
+                        <input type="text" class="form-control" placeholder="Enter the Fullname" name="owner" required> 
+                      </div>
+                  
+                      <div class="form-group">
+                          <label for="ownerIdNumber"><strong>Owner ID Number:</strong></label>
+                          <input type="text" class="form-control" placeholder="Enter Id Number eg: 09-123456-U-79" name="ownerIdNumber" required>
+                      </div>
+                  
+                      <div class="form-group">
+                          <label for="district"><strong>District:</strong></label>
+                          <input type="text" class="form-control" placeholder="Enter the district where the land parcel is" name="district" required>
+                      </div>
+                  
+                      <div class="form-group">
+                          <label for="town"><strong>Town:</strong></label>
+                          <input type="text" class="form-control" placeholder="Enter the Town where the stand is" name="town" required>
+                    </div>
+                </div>
+        </div>
+        
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="province"><strong>Province:</strong></label>
+                    <select class="form-control" id="provinces" name="province" required>
+                        <option value="Masvingo">Masvingo</option>
+                        <option value="Bulawayo">Bulawayo</option>
+                        <option value="Matebleland North">Matebleland North</option>
+                        <option value="Matebleland South">Matebleland South</option>
+                        <option value="Midlands">Midlands</option>
+                        <option value="Harare">Harare</option>
+                        <option value="Mashonaland West">Mashonaland West</option>
+                        <option value="Mashonaland East">Mashonaland East</option>
+                        <option value="Mashonaland Central">Mashonaland Central</option>
+                    </select>
+                </div>
+            
+                <div class="form-group">
+                    <label for="landuse" class="form-label"><strong>Land Use:</strong></label>
+                    <select id="landUse"class="form-control"name="landUse" list="landUse" id="landUse" required>
+                        <option value="Farm">Farm</option>
+                        <option value="Village">Village</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Residential">Residential</option>
+                    </select>
+                </div>
+
+              <div class="form-group">
+                  <label for="purchasePrice"><strong>Appraised Value:</strong></label>
+                  <input type="text" class="form-control" placeholder="Enter Apraised Value" name="appraisedValue" required>
+              </div>
+        
+              <div class="form-group">
+                  <label for="landuse"><strong>Size in Hectares or sizeInSquareMetres:</strong></label>
+                  <input type="text" class="form-control" placeholder="either hectares or square metres" name="sizeInSquareMetres" required>
+              </div>
+            </div>  
+        </div>
+    
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+
+
+
+</form>

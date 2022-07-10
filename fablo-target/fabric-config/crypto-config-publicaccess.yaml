@@ -1,0 +1,8 @@
+PeerOrgs:
+  - Name: PublicAccess
+    Domain: land.publicaccess.com
+    Specs:
+    Template:
+      Count: 1
+    Users:
+      Count: 1

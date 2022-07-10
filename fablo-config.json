@@ -1,0 +1,113 @@
+{
+  "$schema": "https://github.com/softwaremill/fablo/releases/download/1.0.2/schema.json",
+  "global": {
+    "fabricVersion": "2.4.1",
+    "tls": true
+  },
+  "orgs": [
+    {
+      "organization": {
+        "name": "Orderer",
+        "domain": "landreg.com"
+      },
+      "orderers": [
+        {
+          "groupName": "landreg",
+          "type": "raft",
+          "instances": 2
+        }
+      ],
+      "tools": {
+        "explorer": false
+      }
+    },
+    {
+      "organization": {
+        "name": "Registrar",
+        "domain": "land.registrar.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {"explorer": false}
+    },
+
+    {
+      "organization": {
+        "name": "Realtor",
+        "domain": "land.realtor.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {"explorer": false}
+    },
+    {
+      "organization": {
+        "name": "Bank",
+        "domain": "land.bank.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {"explorer": false}
+    },
+    {
+      "organization": {
+        "name": "PublicAccess",
+        "domain": "land.publicaccess.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {"explorer": false}
+    }
+
+  ],
+  "channels": [
+    {
+      "name": "channel01",
+      "orgs": [
+        {
+          "name": "Registrar",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "Realtor",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "Bank",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "PublicAccess",
+          "peers": [
+            "peer0"
+          ]
+        }
+      ],
+      "ordererGroup": "landreg"
+    }
+  ],
+  "chaincodes": [
+    {
+      "directory": "chaincodes/chaincode-typescript",
+      "name": "chaincode-typescript",
+      "channel": "channel01",
+      "version": "1.0.0",
+      "lang": "node",
+      "endorsement": "AND('RegistrarMSP.member','RealtorMSP.member','BankMSP.member')"
+    }
+  ]
+}

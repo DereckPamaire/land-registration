@@ -1,0 +1,53 @@
+name: fablo-test-network-bank
+description: Connection profile for Bank in Fablo network
+version: 1.0.0
+client:
+  organization: Bank
+organizations:
+  Bank:
+    mspid: BankMSP
+    peers:
+      - peer0.land.registrar.com
+      - peer0.land.realtor.com
+      - peer0.land.bank.com
+      - peer0.land.publicaccess.com
+    certificateAuthorities:
+      - ca.land.bank.com
+peers:
+  peer0.land.registrar.com:
+    url: grpcs://localhost:7041
+    tlsCACerts:
+      path: >-
+        /home/shingiraid/fabric/land-registration/fablo-target/fabric-config/crypto-config/peerOrganizations/land.registrar.com/peers/peer0.land.registrar.com/tls/ca.crt
+    grpcOptions:
+      ssl-target-name-override: peer0.land.registrar.com
+  peer0.land.realtor.com:
+    url: grpcs://localhost:7061
+    tlsCACerts:
+      path: >-
+        /home/shingiraid/fabric/land-registration/fablo-target/fabric-config/crypto-config/peerOrganizations/land.realtor.com/peers/peer0.land.realtor.com/tls/ca.crt
+    grpcOptions:
+      ssl-target-name-override: peer0.land.realtor.com
+  peer0.land.bank.com:
+    url: grpcs://localhost:7081
+    tlsCACerts:
+      path: >-
+        /home/shingiraid/fabric/land-registration/fablo-target/fabric-config/crypto-config/peerOrganizations/land.bank.com/peers/peer0.land.bank.com/tls/ca.crt
+    grpcOptions:
+      ssl-target-name-override: peer0.land.bank.com
+  peer0.land.publicaccess.com:
+    url: grpcs://localhost:7101
+    tlsCACerts:
+      path: >-
+        /home/shingiraid/fabric/land-registration/fablo-target/fabric-config/crypto-config/peerOrganizations/land.publicaccess.com/peers/peer0.land.publicaccess.com/tls/ca.crt
+    grpcOptions:
+      ssl-target-name-override: peer0.land.publicaccess.com
+certificateAuthorities:
+  ca.land.bank.com:
+    url: http://localhost:7080
+    caName: ca.land.bank.com
+    tlsCACerts:
+      path: >-
+        /home/shingiraid/fabric/land-registration/fablo-target/fabric-config/crypto-config/peerOrganizations/land.bank.com/ca/ca.land.bank.com-cert.pem
+    httpOptions:
+      verify: false
