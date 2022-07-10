@@ -60,6 +60,13 @@ export class LandTitle {
 
     @Property()
     public	dateOfEditing!: string;
+    @Property()
+    public ownerEmail!: string;
+    @Property()
+    public hashOfIpfsDocs!: string;
+
+    @Property()
+    public transferToEmail!: string;
 }
 
 

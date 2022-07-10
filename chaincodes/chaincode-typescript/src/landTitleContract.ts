@@ -32,7 +32,10 @@ export class LandTitleContract extends Contract {
 				docType: 'landtitle',
 				txId: ctx.stub.getTxID(),
 				identityOfCreator: ctx.clientIdentity.getID(),
-				dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+				dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+				hashOfIpfsDocs: 'hhjsgkskhgjhijjiertjdbvmdfnsgh',
+				ownerEmail: 'owner1@exmple.com',
+				transferToEmail: 'null'
 			},
 			{
 				landTitleId: 'landTitle02',
@@ -51,7 +54,10 @@ export class LandTitleContract extends Contract {
 				docType: 'landtitle',
 				txId: ctx.stub.getTxID(),
 				identityOfCreator: ctx.clientIdentity.getID(),
-				dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+				dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+				hashOfIpfsDocs: 'hhjsgkskhgjhikdfjdfjhtjdbvmdfnsgh',
+				ownerEmail: 'owner2@exmple.com',
+				transferToEmail: 'null'
 			},
 
 		];
@@ -79,6 +85,8 @@ export class LandTitleContract extends Contract {
     	landUse: string,
     	appraisedValue: string,
     	sizeInSquareMetres: string,
+    	hashOfIpfsDocs: string,
+    	ownerEmail: string
     ): Promise<string> {
     	// make sure the creation of of new new land titles is handled only by Registrar Department staff
     	if('RegistrarMSP'!= ctx.clientIdentity.getMSPID()){
@@ -111,7 +119,10 @@ export class LandTitleContract extends Contract {
     		docType: 'land title',
     		txId: ctx.stub.getTxID(),
     		identityOfCreator: ctx.clientIdentity.getID(),
-    		dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+    		dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+    		ownerEmail: ownerEmail,
+    		hashOfIpfsDocs: hashOfIpfsDocs,
+    		transferToEmail: 'null'
     	};
     	// we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
     	await ctx.stub.putState(newLandTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(newLandTitle))));
@@ -134,8 +145,8 @@ export class LandTitleContract extends Contract {
 		if (landTitle.tradingStatus !== 'onSell')  // check if property is on sell
 			return `The land title with ${landTitle.landTitleId}is not on sell`;
 
-		if (landTitle.transferToName == 'null' && landTitle.transferToID == 'null')
-			return `The is no details of New Owner Designate for ${landTitle.landTitleId}`;
+		if (landTitle.transferToName == 'null' && landTitle.transferToID == 'null' && landTitle.transferToEmail == 'null')
+			return `The is no enough details of New Owner Designate for ${landTitle.landTitleId}`;
 
 		const oldOwner = landTitle.owner;
 		
@@ -144,6 +155,9 @@ export class LandTitleContract extends Contract {
 
 		landTitle.ownerIdNumber = landTitle.transferToID;
 		landTitle.transferToID = 'null';
+
+		landTitle.ownerEmail = landTitle.transferToEmail;
+		landTitle.transferToEmail = 'null'; 
 
 		landTitle.dateOfTitleIssue = ctx.stub.getDateTimestamp().toUTCString();
 		landTitle.txId = ctx.stub.getTxID();
@@ -189,7 +203,7 @@ export class LandTitleContract extends Contract {
 	// transaction to set transferto
 	@Transaction(true)
 	@Returns('string')
-	public async setTransferTo(ctx: Context, newOwner: string, landTitleId: string, newOwnerId: string): Promise<string>{
+	public async setTransferTo(ctx: Context, newOwner: string, landTitleId: string, newOwnerId: string, newOwnerEmail: string): Promise<string>{
 		// checking who is doing
 		if('RealtorMSP' != ctx.clientIdentity.getMSPID()){
 			console.error('Only a Realtor can set the new owner designate');
@@ -207,13 +221,15 @@ export class LandTitleContract extends Contract {
 
 		landTitle.transferToName = newOwner;
 		landTitle.transferToID = newOwnerId;
+		landTitle.transferToEmail = newOwnerEmail;
+
 		landTitle.txId = ctx.stub.getTxID();
 		landTitle.identityOfCreator = ctx.clientIdentity.getID();
 
 		landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
 
 		await ctx.stub.putState(landTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(landTitle))));
-		return `The proposed New Owner: ${landTitle.transferToName} \n`;
+		return `The proposed New Owner: ${landTitle.transferToName} \n with Email Address ${landTitle.transferToEmail}`;
 	} 
 	// geting history of a key
 	@Transaction(false)
@@ -236,7 +252,43 @@ export class LandTitleContract extends Contract {
 		}
 		return JSON.stringify(allResults);
 	}
-	
+
+	// change ipfs doc string
+	@Transaction(true)
+	@Returns('string')
+	public async ChangeIpfsDocString(ctx: Context, landTitleId: string, ipfsString: string): Promise<string>{
+		//check who is editing the land title
+		if ('RegistrarMSP'!= ctx.clientIdentity.getMSPID())
+		{
+			console.error('Only a Registrar use can change the documents related to this land title');
+			return 'Only a Registrar use can change the documents related to this land title';
+		}
+		// check if land titlte exists
+		const exists = await this.LandTitleExists(ctx, landTitleId);
+		if (!exists) {
+			console.error(`The land title ${landTitleId} doesn't exists`);
+			return  `The land title ${landTitleId} doesn't exists`;
+		}
+		// get land title to edit
+		const landTitleString = await 	this.ReadLandTitle(ctx, landTitleId);
+		const landTitle = JSON.parse(landTitleString) as LandTitle;
+
+		landTitle.hashOfIpfsDocs = ipfsString;
+		landTitle.txId = ctx.stub.getTxID();
+		landTitle.identityOfCreator = ctx.clientIdentity.getID();
+
+		landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
+		await ctx.stub.putState(landTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(landTitle))));
+
+		const result = {
+			name: landTitle.owner,
+			email: landTitle.ownerEmail,
+			docHash: landTitle.hashOfIpfsDocs,
+			message: `The documents related to ${landTitle.landTitleId} have been changed`
+		};
+
+		return stringify(result) ;
+	}	
 	// LandTitleExists returns true when landTitle with given ID exists in world state.
 	@Transaction(false)
 	@Returns('boolean')
