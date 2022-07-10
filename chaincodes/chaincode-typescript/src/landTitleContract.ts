@@ -155,6 +155,7 @@ export class LandTitleContract extends Contract {
 			return `The is no enough details of New Owner Designate for ${landTitle.landTitleId}`;
 
 		const oldOwner = landTitle.owner;
+		const oldEmail = landTitle.ownerEmail;
 		
 		landTitle.owner = landTitle.transferToName;
 		landTitle.transferToName = 'null';
@@ -175,7 +176,13 @@ export class LandTitleContract extends Contract {
 		landTitle.tradingStatus = 'owned'; // once transfered it's owned
 		// we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
 		await ctx.stub.putState(landTitleId, Buffer.from(stringify(sortKeysRecursive(landTitle))));
-		return `Thew old Owner is Mr/Mrs ${oldOwner} of land title id ${landTitle.landTitleId}`;
+
+		const result = {
+    		email: oldEmail,
+    		message: `The land title ${landTitle.landTitleId} has  been transfered to your buyer\n Congrats Mr/Mrs ${oldOwner}`
+    	};
+
+		return stringify(result);
 	}
 	// transaction to set trading status
 	@Transaction(true)
