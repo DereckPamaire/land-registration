@@ -23,6 +23,10 @@ export class LandTitleModel {
 	// Land transfer fields
 
 	public appraisedValue!: string;
+
+	public ownerEmail!: string;
+	
+	public hashOfIpfsDocs!: string;
 }
 
 

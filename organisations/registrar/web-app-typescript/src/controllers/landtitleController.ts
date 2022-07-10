@@ -23,7 +23,10 @@ const commitLandtitle = async (req: Request, res: Response) => {
 		owner: req.body.owner,
 		ownerIdNumber: req.body.ownerIdNumber,
 		sizeInSquareMetres: req.body.sizeInSquareMetres,
-		town: req.body.town
+		town: req.body.town,
+		ownerEmail: req.body.email,
+		hashOfIpfsDocs: req.body.hash
+
 	};
 	const response = await connectToCreateLandTitle(landDataClear);
 
@@ -66,7 +69,9 @@ const testingApiNew = async (req: Request, res: Response) => {
 		owner: landData.owner,
 		ownerIdNumber: landData.ownerIdNumber,
 		sizeInSquareMetres: landData.sizeInSquareMetres,
-		town: landData.town
+		town: landData.town,
+		ownerEmail: landData.ownerEmail,
+		hashOfIpfsDocs: landData.hashOfIpfsDocs
 
 	};
 	const result = await connectToCreateLandTitle(landDataClear);
