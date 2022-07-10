@@ -203,7 +203,7 @@ export class LandTitleContract extends Contract {
 	// transaction to set transferto
 	@Transaction(true)
 	@Returns('string')
-	public async setTransferTo(ctx: Context, newOwner: string, landTitleId: string, newOwnerId: string, newOwnerEmail: string): Promise<string>{
+	public async setTransferTo(ctx: Context, newOwner: string, newOwnerId: string, newOwnerEmail: string, landTitleId: string): Promise<string>{
 		// checking who is doing
 		if('RealtorMSP' != ctx.clientIdentity.getMSPID()){
 			console.error('Only a Realtor can set the new owner designate');

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { connectToGetLanTitleById } from '../fabricNetworkServices/GetLandTitleById';
 import { connectSetTradingStatus } from '../fabricNetworkServices/SetTradingStatus';
-import {connectToSetNewOwner} from '../fabricNetworkServices/setTransferTo'
+import {connectToSetNewOwner} from '../fabricNetworkServices/setTransferTo';
 
 // handle form response
 const viewlandTitle = async (req: Request, res: Response) => {
 	
-	const id = req.body.id
+	const id = req.body.id;
 	const responseObj = await connectToGetLanTitleById(id); 
 	console.log(responseObj);
 	if (responseObj == undefined|| null){
@@ -33,16 +33,17 @@ const settingTradingStatus = async (req: Request, res: Response) => {
 	const id = req.body.id;
 	const result = await connectSetTradingStatus(id);
 	res.send(result);
-}
+};
 //getting  new owner, id and land title id then setting transfer to fields
 const settingNewOwner = async (req: Request, res: Response) => {
 	const newOwnerName = req.body.name;
 	const newOwnerId = req.body.id;
 	const landTitleId = req.body.landTitleId;
+	const email = req.body.email;
 
-	const result = await connectToSetNewOwner(newOwnerName, newOwnerId, landTitleId)
+	const result = await connectToSetNewOwner(newOwnerName, newOwnerId, email, landTitleId);
 	res.send(result);
-}
+};
 
 
 const formToGetById = async (req: Request, res: Response) => {

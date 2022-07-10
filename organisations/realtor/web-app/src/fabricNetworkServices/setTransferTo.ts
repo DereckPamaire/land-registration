@@ -8,7 +8,7 @@ const chaincodeName = 'chaincode-typescript';
 
 const utf8Decoder = new TextDecoder();
 
-async function connectToSetNewOwner(newOwnerName: string, newOwnerId: string, landTitleId: string): Promise<unknown> {
+async function connectToSetNewOwner(newOwnerName: string, newOwnerId: string, email: string, landTitleId: string): Promise<unknown> {
 
 	const client = await newGrpcConnection();
 
@@ -38,7 +38,7 @@ async function connectToSetNewOwner(newOwnerName: string, newOwnerId: string, la
 		// Listen for events emitted by subsequent transactions
 		events = await startEventListening(network);
 
-		const result = await setNewDetails(contract, newOwnerName, newOwnerId, landTitleId);
+		const result = await setNewDetails(contract, newOwnerName, newOwnerId, landTitleId, email);
 		// await readEvents(events);
 		const resultString = utf8Decoder.decode(result);
 		console.log(`Message from contract: \t\t ${resultString}`);
@@ -84,7 +84,7 @@ function parseJson(jsonBytes?: Uint8Array): unknown {
 	return JSON.parse(json);
 }
 
-async function setNewDetails(contract: Contract, owner: string, id: string, landId: string): Promise<any> {
+async function setNewDetails(contract: Contract, owner: string, id: string, landId: string, email: string): Promise<any> {
 	console.log(`\n--> Setting New Owner for to get Ready for Transfer: ${landId}`);
 	try
 	{
@@ -92,8 +92,10 @@ async function setNewDetails(contract: Contract, owner: string, id: string, land
 		const resultBytes = await contract.submitTransaction(
 			'setTransferTo',
 			owner,
-            landId,
-            id
+			id,
+			email,
+			landId
+
 		);
 		return resultBytes;
 	} catch(err){
