@@ -44,7 +44,10 @@ async function connectToSetNewOwner(newOwnerName: string, newOwnerId: string, em
 		const resultString = utf8Decoder.decode(result);
 		console.log(`Message from contract: \t\t ${resultString}`);
 		const json = JSON.parse(result);
-		sendMail(json.email, json.message);
+
+		if(json.email !== undefined)
+			sendMail(email, json.message);
+
 		return resultString;
 
 	}finally {

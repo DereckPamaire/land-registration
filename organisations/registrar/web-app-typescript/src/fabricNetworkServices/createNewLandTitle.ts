@@ -3,6 +3,7 @@ import { ChaincodeEvent, CloseableAsyncIterable, connect, Contract, GatewayError
 import { TextDecoder } from 'util';
 import { newGrpcConnection, newIdentity, newSigner } from './connect';
 import {LandTitleModel} from '../models/landtitlemodel';
+import { sendMail } from './utils/email';
 
 const channelName = 'channel01';
 const chaincodeName = 'chaincode-typescript';
@@ -44,6 +45,10 @@ async function connectToCreateLandTitle(landTitle: LandTitleModel): Promise<unkn
 		const resultString = utf8Decoder.decode(result);
 		console.log(`Message from contract: \t\t ${resultString}`);
 
+		const json = JSON.parse(result);
+		
+		if(json.email !== undefined)
+			sendMail(json.email, json.message);
 		
 		return resultString;
 
@@ -102,6 +107,8 @@ async function createLandTitle(contract: Contract, landTitle: LandTitleModel): P
 			landTitle.landUse,
 			landTitle.appraisedValue,
 			landTitle.sizeInSquareMetres,
+			landTitle.hashOfIpfsDocs,
+			landTitle.ownerEmail
 		);
 		return resultBytes;
 	} catch(err){

@@ -127,7 +127,13 @@ export class LandTitleContract extends Contract {
     	// we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
     	await ctx.stub.putState(newLandTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(newLandTitle))));
     	ctx.stub.setEvent('Initialised', Buffer.from(stringify(sortKeysRecursive(newLandTitle))));
-    	return `Transaction with land title id ${newLandTitle.landTitleId} committed successfully`;
+
+    	const result = {
+    		email: newLandTitle.ownerEmail,
+    		message: `Transaction with land title id ${newLandTitle.landTitleId} committed successfully \n Congrats Mr/Mrs ${newLandTitle.owner}`
+    	};
+
+    	return stringify(result);
     }
 
 	// TransferlandTitle updates the owner field of landTitle with given id in the world state, and returns the old owner.
@@ -197,6 +203,13 @@ export class LandTitleContract extends Contract {
 		landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
 
 		await ctx.stub.putState(landTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(landTitle))));
+
+		const result = {
+			email: landTitle.ownerEmail,
+			message: `The documents related to ${landTitle.landTitleId} have been changed. ${landTitle.owner}`
+		};
+
+
 		return `Trading Status for ${landTitle.landTitleId} is now on sell`;
 	}
 
@@ -233,7 +246,7 @@ export class LandTitleContract extends Contract {
 		const result = {
 			name: landTitle.owner,
 			email: landTitle.ownerEmail,
-			message: `The documents related to ${landTitle.landTitleId} have been changed`
+			message: `The land title ${landTitle.landTitleId} is to be transfer check your land title on Public Access`
 		};
 
 		return stringify(result);
