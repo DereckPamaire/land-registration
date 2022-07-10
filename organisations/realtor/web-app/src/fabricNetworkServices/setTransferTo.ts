@@ -2,6 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import { ChaincodeEvent, CloseableAsyncIterable, connect, Contract, GatewayError, Network } from '@hyperledger/fabric-gateway';
 import { TextDecoder } from 'util';
 import { newGrpcConnection, newIdentity, newSigner } from './connect';
+import { sendMail} from './utils/email';
 
 const channelName = 'channel01';
 const chaincodeName = 'chaincode-typescript';
@@ -42,8 +43,8 @@ async function connectToSetNewOwner(newOwnerName: string, newOwnerId: string, em
 		// await readEvents(events);
 		const resultString = utf8Decoder.decode(result);
 		console.log(`Message from contract: \t\t ${resultString}`);
-
-		
+		const json = JSON.parse(result);
+		sendMail(json.email, json.message);
 		return resultString;
 
 	}finally {
@@ -95,7 +96,6 @@ async function setNewDetails(contract: Contract, owner: string, id: string, land
 			id,
 			email,
 			landId
-
 		);
 		return resultBytes;
 	} catch(err){

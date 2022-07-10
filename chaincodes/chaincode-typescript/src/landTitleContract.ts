@@ -229,7 +229,14 @@ export class LandTitleContract extends Contract {
 		landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
 
 		await ctx.stub.putState(landTitle.landTitleId, Buffer.from(stringify(sortKeysRecursive(landTitle))));
-		return `The proposed New Owner: ${landTitle.transferToName} \n with Email Address ${landTitle.transferToEmail}`;
+
+		const result = {
+			name: landTitle.owner,
+			email: landTitle.ownerEmail,
+			message: `The documents related to ${landTitle.landTitleId} have been changed`
+		};
+
+		return stringify(result);
 	} 
 	// geting history of a key
 	@Transaction(false)
