@@ -1,10 +1,10 @@
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 const PASSWORD = process.env.EMAIL_PASSWORD
 const EMAIL = process.env.EMAIL
 
-let sender = nodemailer.createTransport({
+const sender = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: EMAIL, // use your email if gmail
@@ -12,7 +12,7 @@ let sender = nodemailer.createTransport({
     }
 });
 async function sendMail (email: string, message: string): Promise<void>{
-    let mailDetails = {
+    const mailDetails = {
         from: EMAIL,
         to: email,
         subject: 'Test mail',
