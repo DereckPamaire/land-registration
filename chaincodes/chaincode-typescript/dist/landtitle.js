@@ -83,6 +83,18 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], LandTitle.prototype, "dateOfEditing", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], LandTitle.prototype, "ownerEmail", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], LandTitle.prototype, "hashOfIpfsDocs", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], LandTitle.prototype, "transferToEmail", void 0);
 LandTitle = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], LandTitle);

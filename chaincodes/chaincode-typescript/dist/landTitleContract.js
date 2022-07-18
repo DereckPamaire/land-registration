@@ -41,7 +41,10 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
                 docType: 'landtitle',
                 txId: ctx.stub.getTxID(),
                 identityOfCreator: ctx.clientIdentity.getID(),
-                dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+                dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+                hashOfIpfsDocs: 'hhjsgkskhgjhijjiertjdbvmdfnsgh',
+                ownerEmail: 'owner1@exmple.com',
+                transferToEmail: 'null'
             },
             {
                 landTitleId: 'landTitle02',
@@ -60,7 +63,10 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
                 docType: 'landtitle',
                 txId: ctx.stub.getTxID(),
                 identityOfCreator: ctx.clientIdentity.getID(),
-                dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+                dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+                hashOfIpfsDocs: 'hhjsgkskhgjhikdfjdfjhtjdbvmdfnsgh',
+                ownerEmail: 'owner2@exmple.com',
+                transferToEmail: 'null'
             },
         ];
         for (const landTitle of landTitles) {
@@ -74,7 +80,7 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         }
     }
     // CreatelandTitle issues a new landTitle to the world state with given details.
-    async CreateNewLandTitle(ctx, district, landTitleId, owner, ownerIdNumber, province, town, landUse, appraisedValue, sizeInSquareMetres) {
+    async CreateNewLandTitle(ctx, district, landTitleId, owner, ownerIdNumber, province, town, landUse, appraisedValue, sizeInSquareMetres, hashOfIpfsDocs, ownerEmail) {
         // make sure the creation of of new new land titles is handled only by Registrar Department staff
         if ('RegistrarMSP' != ctx.clientIdentity.getMSPID()) {
             console.error('The organisation you are part of is not allowed to create new land titles contact Registrar');
@@ -104,12 +110,19 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
             docType: 'land title',
             txId: ctx.stub.getTxID(),
             identityOfCreator: ctx.clientIdentity.getID(),
-            dateOfEditing: ctx.stub.getDateTimestamp().toUTCString()
+            dateOfEditing: ctx.stub.getDateTimestamp().toUTCString(),
+            ownerEmail: ownerEmail,
+            hashOfIpfsDocs: hashOfIpfsDocs,
+            transferToEmail: 'null'
         };
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(newLandTitle.landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(newLandTitle))));
         ctx.stub.setEvent('Initialised', Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(newLandTitle))));
-        return `Transaction with land title id ${newLandTitle.landTitleId} committed successfully`;
+        const result = {
+            email: newLandTitle.ownerEmail,
+            message: `Transaction with land title id ${newLandTitle.landTitleId} committed successfully \n Congrats Mr/Mrs ${newLandTitle.owner}`
+        };
+        return (0, fast_json_stable_stringify_1.default)(result);
     }
     // TransferlandTitle updates the owner field of landTitle with given id in the world state, and returns the old owner.
     async TransferLandTitle(ctx, landTitleId) {
@@ -121,13 +134,16 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         const landTitle = JSON.parse(landTitleString);
         if (landTitle.tradingStatus !== 'onSell') // check if property is on sell
             return `The land title with ${landTitle.landTitleId}is not on sell`;
-        if (landTitle.transferToName == 'null' && landTitle.transferToID == 'null')
-            return `The is no details of New Owner Designate for ${landTitle.landTitleId}`;
+        if (landTitle.transferToName == 'null' && landTitle.transferToID == 'null' && landTitle.transferToEmail == 'null')
+            return `The is no enough details of New Owner Designate for ${landTitle.landTitleId}`;
         const oldOwner = landTitle.owner;
+        const oldEmail = landTitle.ownerEmail;
         landTitle.owner = landTitle.transferToName;
         landTitle.transferToName = 'null';
         landTitle.ownerIdNumber = landTitle.transferToID;
         landTitle.transferToID = 'null';
+        landTitle.ownerEmail = landTitle.transferToEmail;
+        landTitle.transferToEmail = 'null';
         landTitle.dateOfTitleIssue = ctx.stub.getDateTimestamp().toUTCString();
         landTitle.txId = ctx.stub.getTxID();
         landTitle.identityOfCreator = ctx.clientIdentity.getID();
@@ -135,7 +151,11 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         landTitle.tradingStatus = 'owned'; // once transfered it's owned
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
         await ctx.stub.putState(landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(landTitle))));
-        return `Thew old Owner is Mr/Mrs ${oldOwner} of land title id ${landTitle.landTitleId}`;
+        const result = {
+            email: oldEmail,
+            message: `The land title ${landTitle.landTitleId} has  been transfered to your buyer\n Congrats Mr/Mrs ${oldOwner}`
+        };
+        return (0, fast_json_stable_stringify_1.default)(result);
     }
     // transaction to set trading status
     async setTradingStatus(ctx, landTitleId) {
@@ -158,10 +178,14 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         landTitle.identityOfCreator = ctx.clientIdentity.getID();
         landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
         await ctx.stub.putState(landTitle.landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(landTitle))));
+        const result = {
+            email: landTitle.ownerEmail,
+            message: `The documents related to ${landTitle.landTitleId} have been changed. ${landTitle.owner}`
+        };
         return `Trading Status for ${landTitle.landTitleId} is now on sell`;
     }
     // transaction to set transferto
-    async setTransferTo(ctx, newOwner, landTitleId, newOwnerId) {
+    async setTransferTo(ctx, newOwner, newOwnerId, newOwnerEmail, landTitleId) {
         // checking who is doing
         if ('RealtorMSP' != ctx.clientIdentity.getMSPID()) {
             console.error('Only a Realtor can set the new owner designate');
@@ -178,11 +202,17 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         const landTitle = JSON.parse(landTitleString);
         landTitle.transferToName = newOwner;
         landTitle.transferToID = newOwnerId;
+        landTitle.transferToEmail = newOwnerEmail;
         landTitle.txId = ctx.stub.getTxID();
         landTitle.identityOfCreator = ctx.clientIdentity.getID();
         landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
         await ctx.stub.putState(landTitle.landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(landTitle))));
-        return `The proposed New Owner: ${landTitle.transferToName} \n`;
+        const result = {
+            name: landTitle.owner,
+            email: landTitle.ownerEmail,
+            message: `The land title ${landTitle.landTitleId} is to be transfer check your land title on Public Access`
+        };
+        return (0, fast_json_stable_stringify_1.default)(result);
     }
     // geting history of a key
     async GetLandTitleHistory(ctx, landTitleId) {
@@ -203,6 +233,35 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
             result = await iterator.next();
         }
         return JSON.stringify(allResults);
+    }
+    // change ipfs doc string
+    async ChangeIpfsDocString(ctx, landTitleId, ipfsString) {
+        //check who is editing the land title
+        if ('RegistrarMSP' != ctx.clientIdentity.getMSPID()) {
+            console.error('Only a Registrar use can change the documents related to this land title');
+            return 'Only a Registrar use can change the documents related to this land title';
+        }
+        // check if land titlte exists
+        const exists = await this.LandTitleExists(ctx, landTitleId);
+        if (!exists) {
+            console.error(`The land title ${landTitleId} doesn't exists`);
+            return `The land title ${landTitleId} doesn't exists`;
+        }
+        // get land title to edit
+        const landTitleString = await this.ReadLandTitle(ctx, landTitleId);
+        const landTitle = JSON.parse(landTitleString);
+        landTitle.hashOfIpfsDocs = ipfsString;
+        landTitle.txId = ctx.stub.getTxID();
+        landTitle.identityOfCreator = ctx.clientIdentity.getID();
+        landTitle.dateOfEditing = ctx.stub.getDateTimestamp().toUTCString();
+        await ctx.stub.putState(landTitle.landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(landTitle))));
+        const result = {
+            name: landTitle.owner,
+            email: landTitle.ownerEmail,
+            docHash: landTitle.hashOfIpfsDocs,
+            message: `The documents related to ${landTitle.landTitleId} have been changed`
+        };
+        return (0, fast_json_stable_stringify_1.default)(result);
     }
     // LandTitleExists returns true when landTitle with given ID exists in world state.
     async LandTitleExists(ctx, landTitleId) {
@@ -229,7 +288,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(true),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String, String, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String, String, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], LandTitleContract.prototype, "CreateNewLandTitle", null);
 __decorate([
@@ -250,7 +309,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(true),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], LandTitleContract.prototype, "setTransferTo", null);
 __decorate([
@@ -260,6 +319,13 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], LandTitleContract.prototype, "GetLandTitleHistory", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], LandTitleContract.prototype, "ChangeIpfsDocString", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('boolean'),

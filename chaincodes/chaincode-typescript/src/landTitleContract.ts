@@ -213,11 +213,11 @@ export class LandTitleContract extends Contract {
 
 		const result = {
 			email: landTitle.ownerEmail,
-			message: `The documents related to ${landTitle.landTitleId} have been changed. ${landTitle.owner}`
+			message: `Trading Status for ${landTitle.landTitleId} is now on sell`
 		};
 
 
-		return `Trading Status for ${landTitle.landTitleId} is now on sell`;
+		return stringify(result);
 	}
 
 	// transaction to set transferto
