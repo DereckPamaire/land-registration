@@ -180,9 +180,9 @@ let LandTitleContract = class LandTitleContract extends fabric_contract_api_1.Co
         await ctx.stub.putState(landTitle.landTitleId, Buffer.from((0, fast_json_stable_stringify_1.default)((0, sort_keys_recursive_1.default)(landTitle))));
         const result = {
             email: landTitle.ownerEmail,
-            message: `The documents related to ${landTitle.landTitleId} have been changed. ${landTitle.owner}`
+            message: `Trading Status for ${landTitle.landTitleId} is now on sell`
         };
-        return `Trading Status for ${landTitle.landTitleId} is now on sell`;
+        return (0, fast_json_stable_stringify_1.default)(result);
     }
     // transaction to set transferto
     async setTransferTo(ctx, newOwner, newOwnerId, newOwnerEmail, landTitleId) {

@@ -1,8 +1,0 @@
-PeerOrgs:
-  - Name: Bank
-    Domain: land.bank.com
-    Specs:
-    Template:
-      Count: 1
-    Users:
-      Count: 1
