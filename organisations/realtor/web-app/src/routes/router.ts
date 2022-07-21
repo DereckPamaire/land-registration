@@ -1,13 +1,10 @@
 import express, { Request, Response } from 'express';
 import * as landTitleController from '../controllers/landtitleController';
-import * as exampleController from '../controllers/exampleContoller';
-
 
 const indexPage = (app:express.Application) => {
 // index age
 	app.get('/index', (req: Request, res: Response) => { res.render('pages/index'); });
 };
-
 
 const aboutPage = (app:express.Application) => {
 	// about page routing
@@ -17,7 +14,7 @@ const aboutPage = (app:express.Application) => {
 
 const landtitleview = (app:express.Application) => {
 	// gets an id, query the ledger and render a view
-	app.get('/landtitle/view', landTitleController.viewlandTitle);
+	app.get('/realtor/landtitle/view', landTitleController.viewlandTitle);
 };
 
 const getById = (app:express.Application) => {
@@ -26,15 +23,26 @@ const getById = (app:express.Application) => {
 };
 const setStatusToTrading = async (app:express.Application) =>{
 	app.post('/api/landtitle/trading', landTitleController.settingTradingStatus);
-}
+};
 
 const formId = (app: express.Application) => {
-	app.get('/landtitle/id', landTitleController.formToGetById);
+	app.get('/realtor/landtitle/id', landTitleController.formToGetById);
 };
 
 const newOwnershipDetails = (app: express.Application) => {
 	app.post('/api/landtitle/newdetails', landTitleController.settingNewOwner);
-}
+};
+
+//one to give query form for history
+const formHistory = (app:express.Application) =>{
+	app.get('/registrar/history/id', (req: Request, res: Response) => { res.render('pages/history');});
+};
+
+//alternative for the web
+const landtitlehistory = (app:express.Application) => {
+	// gets an id, query the ledger and render a view
+	app.post('/publicaccess/landtitle/history', landTitleController.viewlandTitleHistory);
+};
 
 export {
 	indexPage,
@@ -43,5 +51,7 @@ export {
 	getById,
 	setStatusToTrading,
 	formId,
-	newOwnershipDetails
+	newOwnershipDetails,
+	formHistory,
+	landtitlehistory
 };

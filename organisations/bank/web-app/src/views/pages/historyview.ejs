@@ -1,0 +1,22 @@
+
+  
+  <% for (let i=0;i<results.length;i++){ %>
+    <div class="jumbotron">
+    <table class="table table-borderless">
+      <% Object.keys(results[i]).forEach((key, index) => {%>
+    
+          <tbody>
+            <tr>
+              <td>
+               <strong>
+                <%= `${key}:` %>
+               </strong> 
+              </td>
+              <td><%= `${results[i][key]}`%></td>
+            </tr>
+          </tbody>
+    
+      <% }); %>
+    </table>
+    </div>
+  <% } %>

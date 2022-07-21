@@ -4,7 +4,7 @@ import { connectToInitialise } from '../fabricNetworkServices/initializeBlockCha
 import { connectToGetLanTitleById } from '../fabricNetworkServices/GetLandTitleById';
 import { LandTitleModel } from '../models/landtitlemodel';
 import { connectToTransferLandTitle } from '../fabricNetworkServices/transferLandTitle';
-
+import { connectToGetLandTitleHistory } from '../fabricNetworkServices/getHistory';
 // working
 const landTitleForm = (req: Request, res: Response) => {
 	res.render('pages/landtitleform');
@@ -97,7 +97,19 @@ const finalTransfer = async (req: Request, res: Response) => {
 	const result = await connectToTransferLandTitle( landTitleId );
 	res.send(result);
 };
-
+const viewlandTitleHistory = async (req: Request, res: Response) => {
+	// in this instance i'm passing json from file
+	const id = req.body.id;
+	const result = await connectToGetLandTitleHistory(id); 
+	if (result == undefined|| null){
+		const result = `The Land Title with ${id} does not exist`;
+		res.render('pages/doesnotexist',{result});
+	} else{
+		let results= [];
+		results = [...result];
+		res.render('pages/historyview',{results});
+	}
+};
 
 export {
 	landTitleForm,
@@ -107,5 +119,6 @@ export {
 	testingApiNew,
 	getLandTitleById,
 	formToGetById,
-	finalTransfer
+	finalTransfer,
+	viewlandTitleHistory
 };

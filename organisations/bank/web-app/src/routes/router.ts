@@ -27,10 +27,23 @@ const formId = (app: express.Application) => {
 	app.get('/bank/landtitle/id', landTitleController.formToGetById);
 };
 
+//alternative for the web
+const landtitlehistory = (app:express.Application) => {
+	// gets an id, query the ledger and render a view
+	app.post('/bank/landtitle/history', landTitleController.viewlandTitleHistory);
+};
+
+//one to give query form for history
+const formHistory = (app:express.Application) =>{
+	app.get('/bank/history/id', (req: Request, res: Response) => { res.render('pages/history') });
+};
+
 export {
 	indexPage,
 	aboutPage,
 	landtitleview,
 	getById,
-	formId
+	formId,
+	landtitlehistory,
+	formHistory
 };

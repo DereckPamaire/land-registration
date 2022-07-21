@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { connectToGetLanTitleById } from '../fabricNetworkServices/GetLandTitleById';
 import { connectSetTradingStatus } from '../fabricNetworkServices/SetTradingStatus';
 import {connectToSetNewOwner} from '../fabricNetworkServices/setTransferTo';
+import { connectToGetLandTitleHistory } from '../fabricNetworkServices/getHistory';
 
 // handle form response
 const viewlandTitle = async (req: Request, res: Response) => {
@@ -50,10 +51,25 @@ const formToGetById = async (req: Request, res: Response) => {
 	res.render('pages/landtitlebyid');
 };
 
+const viewlandTitleHistory = async (req: Request, res: Response) => {
+	// in this instance i'm passing json from file
+	const id = req.body.id;
+	const result = await connectToGetLandTitleHistory(id); 
+	if (result == undefined|| null){
+		const result = `The Land Title with ${id} does not exist`;
+		res.render('pages/doesnotexist',{result});
+	} else{
+		let results= [];
+		results = [...result];
+		res.render('pages/historyview',{results});
+	}
+};
+
 export {
 	viewlandTitle,
 	getLandTitleById,
 	settingTradingStatus,
 	formToGetById,
-	settingNewOwner
+	settingNewOwner,
+	viewlandTitleHistory
 };

@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import * as landTitleController from '../controllers/landtitleController';
-import * as exampleController from '../controllers/exampleContoller';
 
 
 const ApiInitialise = (app:express.Application) => {
@@ -13,11 +12,6 @@ const indexPage = (app:express.Application) => {
 	app.get('/index', (req: Request, res: Response) => { res.render('pages/index'); });
 };
 
-const examplePage = (app:express.Application) => {
-	// example page
-	app.get('/eg', exampleController.eg);
-};
-
 const aboutPage = (app:express.Application) => {
 	// about page routing
 	app.get('/about', (req: Request, res: Response) => { res.render('pages/about'); }  );
@@ -25,12 +19,12 @@ const aboutPage = (app:express.Application) => {
 
 const landTitlePage = (app:express.Application) => {
 	// renders the form to create new land title
-	app.get('/landtitleform', landTitleController.landTitleForm );
+	app.get('/registrar/landtitleform', landTitleController.landTitleForm );
 };
 
 const responseToForm = (app:express.Application) => {
 	// the response to a form submission
-	app.post('/landtitleform/commit', landTitleController.commitLandtitle);
+	app.post('/registrar/landtitleform/commit', landTitleController.commitLandtitle);
 };
 
 const landtitleJsonApi = (app:express.Application) => {
@@ -40,10 +34,10 @@ const landtitleJsonApi = (app:express.Application) => {
 
 const landtitleview = (app:express.Application) => {
 	// gets an id, query the ledger and render a view
-	app.post('/landtitle/view', landTitleController.viewlandTitle);
+	app.post('/registrar/landtitle/view', landTitleController.viewlandTitle);
 };
 const formId = (app: express.Application) => {
-	app.get('/landtitle/id', landTitleController.formToGetById);
+	app.get('/registrar/landtitle/id', landTitleController.formToGetById);
 };
 
 const getById = (app:express.Application) => {
@@ -56,10 +50,20 @@ const transfer = (app:express.Application) => {
 	app.post('/api/landtitle/transfer/id', landTitleController.finalTransfer);
 };
 
+//alternative for the web
+const landtitlehistory = (app:express.Application) => {
+	// gets an id, query the ledger and render a view
+	app.post('/registrar/landtitle/history', landTitleController.viewlandTitleHistory);
+};
+
+//one to give query form for history
+const formHistory = (app:express.Application) =>{
+	app.get('/registrar/history/id', (req: Request, res: Response) => { res.render('pages/history');});
+};
+
 export {
 	ApiInitialise,
 	indexPage,
-	examplePage,
 	aboutPage,
 	landTitlePage,
 	responseToForm,
@@ -67,5 +71,7 @@ export {
 	landtitleview,
 	getById,
 	formId,
-	transfer
+	transfer,
+	landtitlehistory,
+	formHistory
 };
