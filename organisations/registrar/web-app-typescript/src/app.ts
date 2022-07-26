@@ -24,7 +24,6 @@ app.use(express.json());
 // the routers to variours resources as exported by the router.ts file
 router.ApiInitialise(app);
 router.indexPage(app);
-router.examplePage(app);
 router.aboutPage(app);
 router.landTitlePage(app);
 router.responseToForm(app);
@@ -33,6 +32,8 @@ router.landtitleview(app);
 router.getById(app);
 router.formId(app);
 router.transfer(app);
+router.formHistory(app);
+router.landtitlehistory(app);
 
 app.listen(PORT, () => { console.log('The app is listening on port  http://localhost:%d', PORT); });
 // this is my server program

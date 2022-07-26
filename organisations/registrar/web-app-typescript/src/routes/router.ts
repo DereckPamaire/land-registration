@@ -19,7 +19,7 @@ const aboutPage = (app:express.Application) => {
 
 const landTitlePage = (app:express.Application) => {
 	// renders the form to create new land title
-	app.get('/registrar/landtitleform', landTitleController.landTitleForm );
+	app.get('/registrar/landtitle/form', landTitleController.landTitleForm );
 };
 
 const responseToForm = (app:express.Application) => {

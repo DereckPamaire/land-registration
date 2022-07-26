@@ -6,7 +6,7 @@
 # More information at https://github.com/gliderlabs/logspout/tree/master/httpstream
 
 if [ -z "$1" ]; then
-   DOCKER_NETWORK=fablo_network_202207181019_basic
+   DOCKER_NETWORK=fablo_network_202207261028_basic
 else
    DOCKER_NETWORK="$1"
 fi
