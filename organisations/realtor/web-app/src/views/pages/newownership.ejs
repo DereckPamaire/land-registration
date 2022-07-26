@@ -1,21 +1,27 @@
-<form action="/realtor/landtitle/newdetails" class="row" method="post">
-    <div class="form-group">
-        <label for="id">Land Title ID:</label>
-        <input type="text" class="form-control" placeholder="eg Landtitle04" name="landTitleId">
+<form action="/realtor/landtitle/newdetails" class="container" method="post">
 
+    <div class="jumbotron">
+        <div class="form-group">
+            <label for="id"> <strong>Land Title ID:</strong> </label>
+            <input type="text" class="form-control" placeholder="eg Landtitle04" name="landTitleId">
+    
+        </div>
+        <div class="form-group">
+            <label for="owner"><strong>New Owner Full Name:</strong></label>
+            <input type="text" class="form-control" placeholder="Enter the Fullname" name="name" required> 
+          </div>
+      
+          <div class="form-group">
+              <label for="ownerIdNumber"><strong>New Owner ID Number:</strong></label>
+              <input type="text" class="form-control" placeholder="Enter Id Number eg: 09-123456-U-79" name="id" required>
+          </div>
+          <div class="form-group">
+            <label for="email"><strong>Email:</strong></label>
+            <input type="email" class="form-control" placeholder="username@example.com" name="email" required>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="owner"><strong>Owner Full Name:</strong></label>
-        <input type="text" class="form-control" placeholder="Enter the Fullname" name="name" required> 
-      </div>
-  
-      <div class="form-group">
-          <label for="ownerIdNumber"><strong>Owner ID Number:</strong></label>
-          <input type="text" class="form-control" placeholder="Enter Id Number eg: 09-123456-U-79" name="id" required>
-      </div>
-      <div class="form-group">
-        <label for="email"><strong>Email:</strong></label>
-        <input type="email" class="form-control" placeholder="username@example.com" name="email" required>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+
 </form>
