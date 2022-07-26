@@ -21,29 +21,46 @@ const getById = (app:express.Application) => {
 	// api that receives json data
 	app.post('/api/landtitle/id', landTitleController.getLandTitleById);
 };
-const setStatusToTrading = async (app:express.Application) =>{
+
+// api for testing
+const setStatusToTradingApi = async (app:express.Application) =>{
 	app.post('/api/landtitle/trading', landTitleController.settingTradingStatus);
 };
 
+const setStatusToTrading = async (app:express.Application) =>{
+	app.post('/realtor/landtitle/trading', landTitleController.settingTradingStatus);
+};
+
 const formId = (app: express.Application) => {
-	app.get('/realtor/landtitle/id', landTitleController.formToGetById);
+	app.get('/realtor/landtitle/form', (req: Request, res: Response) => res.render('pages/landtitlebyid'));
+};
+
+// api for testing
+const newOwnershipDetailsApi = (app: express.Application) => {
+	app.post('/api/landtitle/newdetails', landTitleController.settingNewOwner);
 };
 
 const newOwnershipDetails = (app: express.Application) => {
-	app.post('/api/landtitle/newdetails', landTitleController.settingNewOwner);
+	app.post('/realtor/landtitle/newdetails', landTitleController.settingNewOwner);
 };
 
 //one to give query form for history
 const formHistory = (app:express.Application) =>{
-	app.get('/registrar/history/id', (req: Request, res: Response) => { res.render('pages/history');});
+	app.get('/realtor/history/id', (req: Request, res: Response) => { res.render('pages/history');});
 };
 
 //alternative for the web
 const landtitlehistory = (app:express.Application) => {
 	// gets an id, query the ledger and render a view
-	app.post('/publicaccess/landtitle/history', landTitleController.viewlandTitleHistory);
+	app.post('/realtor/landtitle/history', landTitleController.viewlandTitleHistory);
 };
 
+const formTrading = (app:express.Application) =>{
+	app.get('/realtor/trading/form', (req: Request, res: Response) => { res.render('pages/tradingstatus');});
+};
+const formNewDetails = (app:express.Application) =>{
+	app.get('/realtor/newdetails/form', (req: Request, res: Response) => { res.render('pages/newownership');});
+};
 export {
 	indexPage,
 	aboutPage,
@@ -53,5 +70,7 @@ export {
 	formId,
 	newOwnershipDetails,
 	formHistory,
-	landtitlehistory
+	landtitlehistory,
+	formTrading,
+	formNewDetails
 };

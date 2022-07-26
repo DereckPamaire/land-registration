@@ -28,7 +28,10 @@ router.landtitleview(app);
 router.setStatusToTrading(app);
 router.formId(app);
 router.newOwnershipDetails(app);
-
+router.formHistory(app);
+router.landtitlehistory(app);
+router.formTrading(app);
+router.formNewDetails(app);
 
 app.listen(PORT, () => { console.log('The app is listening on port  http://localhost:%d', PORT); });
 // this is my server program

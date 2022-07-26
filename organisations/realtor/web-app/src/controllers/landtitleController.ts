@@ -41,14 +41,9 @@ const settingNewOwner = async (req: Request, res: Response) => {
 	const newOwnerId = req.body.id;
 	const landTitleId = req.body.landTitleId;
 	const email = req.body.email;
-
+	console.log(newOwnerName, newOwnerId, email, landTitleId);
 	const result = await connectToSetNewOwner(newOwnerName, newOwnerId, email, landTitleId);
 	res.send(result);
-};
-
-
-const formToGetById = async (req: Request, res: Response) => {
-	res.render('pages/landtitlebyid');
 };
 
 const viewlandTitleHistory = async (req: Request, res: Response) => {
@@ -69,7 +64,6 @@ export {
 	viewlandTitle,
 	getLandTitleById,
 	settingTradingStatus,
-	formToGetById,
 	settingNewOwner,
 	viewlandTitleHistory
 };
