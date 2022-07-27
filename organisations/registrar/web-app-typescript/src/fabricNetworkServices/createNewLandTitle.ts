@@ -10,7 +10,7 @@ const chaincodeName = 'chaincode-typescript';
 
 const utf8Decoder = new TextDecoder();
 
-async function connectToCreateLandTitle(landTitle: LandTitleModel): Promise<unknown> {
+async function connectToCreateLandTitle(landTitle: LandTitleModel): Promise<any> {
 
 	const client = await newGrpcConnection();
 

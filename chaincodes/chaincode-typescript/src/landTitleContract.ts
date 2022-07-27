@@ -239,6 +239,11 @@ export class LandTitleContract extends Contract {
 		const landTitleString = await 	this.ReadLandTitle(ctx, landTitleId);
 		const landTitle = JSON.parse(landTitleString) as LandTitle;
 
+		if('null'== landTitle.tradingStatus){
+			console.error(`The land title with Land Title Id ${landTitle.landTitleId} is not on sell`);
+			return stringify({massage: `The land title with Land Title Id ${landTitle.landTitleId} is not on sell`});
+		}
+
 		landTitle.transferToName = newOwner;
 		landTitle.transferToID = newOwnerId;
 		landTitle.transferToEmail = newOwnerEmail;

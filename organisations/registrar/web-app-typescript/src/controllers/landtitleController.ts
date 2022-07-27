@@ -29,8 +29,8 @@ const commitLandtitle = async (req: Request, res: Response) => {
 
 	};
 	const response = await connectToCreateLandTitle(landDataClear);
-
-	return res.render('pages/formresponse', {response: response});
+	const responseObj = JSON.parse(response);
+	return res.render('pages/formresponse', {responseObj});
 
 };
 // working
@@ -87,7 +87,7 @@ const getLandTitleById = async (req: Request, res: Response) => {
 	console.log(responseObj);
 	const responseJson = JSON.stringify(responseObj);
 	//res.render('pages/landtitleview');
-	return res.send(responseJson);
+	return res.send(responseJson); 
 };
 
 //getting  new owner, id and land title id then setting transfer to fields

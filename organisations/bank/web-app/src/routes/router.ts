@@ -18,7 +18,7 @@ const landtitleview = (app:express.Application) => {
 	app.post('/bank/landtitle/view', landTitleController.viewlandTitle);
 };
 
-const getById = (app:express.Application) => {
+const getByIdApi = (app:express.Application) => {
 	// api that receives json data
 	app.post('/bank/api/landtitle/id', landTitleController.getByIdApi);
 };
@@ -42,7 +42,7 @@ export {
 	indexPage,
 	aboutPage,
 	landtitleview,
-	getById,
+	getByIdApi,
 	formId,
 	landtitlehistory,
 	formHistory

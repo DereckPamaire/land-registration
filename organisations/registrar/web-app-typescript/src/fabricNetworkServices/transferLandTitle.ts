@@ -44,7 +44,7 @@ async function connectToTransferLandTitle(landTitleId: string): Promise<string> 
 		const resultString = utf8Decoder.decode(result);
 		console.log(`Message from contract: \t\t ${resultString}`);
 
-		const json = JSON.parse(result);
+		const json = JSON.parse(resultString);
 
 		if(json.email !== undefined)
 			sendMail(json.email, json.message);

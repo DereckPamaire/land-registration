@@ -27,7 +27,9 @@ router.aboutPage(app);
 router.landtitleview(app);
 router.formId(app);
 router.indexPage(app);
-router.getById(app); 
+router.getByIdApi(app);
+router.formHistory(app);
+router.landtitlehistory(app); 
 
 
 app.listen(PORT, () => { console.log('The app is listening on port  http://localhost:%d', PORT); });
